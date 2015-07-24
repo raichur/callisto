@@ -5,6 +5,7 @@ void setup() {
 }
 
 int col = 150;
+int eye = 512;
 
 void draw() {
   background(255);
@@ -24,5 +25,9 @@ void draw() {
   fill(0);
   ellipse(125,150,20,20);
   ellipse(175,150,20,20);
+  
+  // Eyebrows
+  line(100,100+map(eye,0,1024,-10,10),140,100-map(eye,0,1024,-10,10));
+  line(160,100+map(eye,0,1024,-10,10),200,100-map(eye,0,1024,-10,10));
   
 }
