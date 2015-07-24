@@ -1,3 +1,11 @@
+import twitter4j.*;
+
+Twitter twitter;
+String[] tweets = {
+  "My emotion can be best described as: #Callisto",
+  "I feel so: #Callisto"
+};
+
 void setup() {
   size(300,480);
   smooth();
@@ -16,10 +24,6 @@ void draw() {
   
   background(255);
   strokeWeight(3);
-  
-  // Draw stuff on canvas
-  drawSliders();
-  drawButton();
   
   // Values from 0 to 1023 to control hue val
   color c = color(map(col, 0, 1024, 0, 255), 255, 255);
@@ -49,6 +53,11 @@ void draw() {
   curveVertex(200,200);
   curveVertex(200,200);
   endShape();
+  
+  // Draw stuff on canvas
+  drawSliders();
+  drawButton();
+  initTwitter();
   
 }
 
@@ -98,7 +107,7 @@ void mouseDragged() {
 
 void mouseReleased() {
   if(bclick) {
-    println("Button clicked");
+    tweet();
   }
   bclick = false;
   mclick = false;
@@ -106,6 +115,7 @@ void mouseReleased() {
   cclick = false;
 }
 
+// Tweet button
 void drawButton() {
   fill(bclick ? 128 : 255);
   stroke(0);
@@ -114,4 +124,66 @@ void drawButton() {
   fill(0);
   textSize(30);
   text("TWEET",105,height-44);
+}
+
+
+// Initializing Twitter
+void initTwitter() {
+ 
+ String[] keys = loadStrings("keys.txt");
+ 
+ if(keys.length <= 2) {
+    try {
+      twitter = TwitterFactory.getSingleton();
+      twitter.setOAuthConsumer(keys[0],keys[1]);
+      RequestToken requestToken = twitter.getOAuthRequestToken();
+      AccessToken at = null;
+      if(System.getProperty("os.name").toLowerCase().indexOf("win")>=0) {
+        link(requestToken.getAuthorizationURL());
+      } else {
+        open(requestToken.getAuthorizationURL());
+      }
+      
+      String preset = "";
+      String pin = javax.swing.JOptionPane.showInputDialog(frame,"Enter your PIN here",preset);
+      at = twitter.getOAuthAccessToken(requestToken,pin);
+      
+      String[] newKeys = new String[4];
+      newKeys[0] = keys[0];
+      newKeys[1] = keys[1];
+      newKeys[2] = at.getToken();
+      newKeys[3] = at.getTokenSecret();
+      
+      saveStrings("data/keys.txt",newKeys);
+      
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+  } else {
+    ConfigurationBuilder cb = new ConfigurationBuilder();
+    cb.setOAuthConsumerKey(keys[0]);
+    cb.setOAuthConsumerSecret(keys[1]);
+    cb.setOAuthAccessToken(keys[2]);
+    cb.setOAuthAccessTokenSecret(keys[3]);
+    
+    twitter = new TwitterFactory(cb.build()).getInstance();
+  }
+  
+}
+
+
+// Tweet with Image
+void tweet() {
+  
+  PImage image = get(0,0,300,300);
+  image.save("emoticon.png");
+  
+  java.io.File f = new java.io.File(sketchPath("emoticon.png"));
+  StatusUpdate status = new StatusUpdate(tweets[int(random(tweets.length))]);
+  status.setMedia(f);
+  try {
+    twitter.updateStatus(status);
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
 }
