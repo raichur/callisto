@@ -7,6 +7,9 @@ void setup() {
 int col = 150;
 int eye = 512;
 int mouth = 1024;
+boolean mclick = false;
+boolean eclick = false;
+boolean cclick = false;
 
 void draw() {
   
@@ -49,7 +52,7 @@ void draw() {
 
 void drawSliders() {
  
- fill(0);
+ fill(#E54A3D);
  strokeWeight(3);
  
  // Change mouth
@@ -63,4 +66,31 @@ void drawSliders() {
  // Change color
  rect(20,375,width-40,2);  
  ellipse(15+map(col,0,1024,0,width-40),375,15,15);
+}
+
+void mousePressed() {
+  if(mouseY>310 && mouseY<325) {
+    mclick = true;
+    mouth = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
+  }
+  if(mouseY>340 && mouseY<355) {
+    eclick = true;
+    eye = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
+  }
+  if(mouseY>360 && mouseY<390) {
+    cclick = true;
+    col = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
+  }
+}
+
+void mouseDragged() {
+  if(mclick) mouth = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
+  if(eclick) eye = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
+  if(cclick) col = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
+}
+
+void mouseReleased() {
+  mclick = false;
+  eclick = false;
+  cclick = false;
 }
