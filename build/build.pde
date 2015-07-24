@@ -6,6 +6,7 @@ void setup() {
 
 int col = 150;
 int eye = 512;
+int mouth = 120;
 
 void draw() {
   background(255);
@@ -29,5 +30,9 @@ void draw() {
   // Eyebrows
   line(100,100+map(eye,0,1024,-10,10),140,100-map(eye,0,1024,-10,10));
   line(160,100+map(eye,0,1024,-10,10),200,100-map(eye,0,1024,-10,10));
+  
+  // Mouth
+  noFill();
+  arc(150,180,150,mouth,0,PI); // 100,180+map(mouth,0,1024,0,50)
   
 }
