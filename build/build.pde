@@ -50,7 +50,7 @@ void draw() {
 void drawSliders() {
  
  fill(0);
- strokeWeight(1);
+ strokeWeight(3);
  
  // Change mouth
  rect(20,315,width-40,2);
