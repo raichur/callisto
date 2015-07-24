@@ -53,5 +53,16 @@ void setup() {
 }
 
 void draw() {
-  
+  background(255);
+  fill(0);
+  text("Click here to Tweet",40,60);
+}
+
+void mouseClicked() {
+  try {
+    StatusUpdate status = new StatusUpdate(tweets[int(random(tweets.length))]);
+    twitter.updateStatus(status);
+  } catch(Exception e) {
+    e.printStackTrace();
+  }
 }
