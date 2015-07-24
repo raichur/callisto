@@ -1,5 +1,5 @@
 void setup() {
-  size(300,390);
+  size(300,480);
   smooth();
   colorMode(HSB); // Hue, Saturation, Brightness
 }
@@ -7,16 +7,19 @@ void setup() {
 int col = 150;
 int eye = 512;
 int mouth = 1024;
-boolean mclick = false;
-boolean eclick = false;
-boolean cclick = false;
+boolean mclick = false; // Mouth Slider
+boolean eclick = false; // Eyebrow Slider
+boolean cclick = false; // Color Slider
+boolean bclick = false; // Button pressed 
 
 void draw() {
   
   background(255);
   strokeWeight(3);
   
+  // Draw stuff on canvas
   drawSliders();
+  drawButton();
   
   // Values from 0 to 1023 to control hue val
   color c = color(map(col, 0, 1024, 0, 255), 255, 255);
@@ -81,6 +84,10 @@ void mousePressed() {
     cclick = true;
     col = constrain(int(map(mouseX,20,width-20,0,1024)),0,1024);
   }
+  if(mouseY>height-80 && mouseY<height-30 && mouseX>20 && mouseX<width-20) {
+    bclick = true;
+    return;
+  }
 }
 
 void mouseDragged() {
@@ -90,7 +97,21 @@ void mouseDragged() {
 }
 
 void mouseReleased() {
+  if(bclick) {
+    println("Button clicked");
+  }
+  bclick = false;
   mclick = false;
   eclick = false;
   cclick = false;
+}
+
+void drawButton() {
+  fill(bclick ? 128 : 255);
+  stroke(0);
+  strokeWeight(2);
+  rect(20,height-80,width-40,50);
+  fill(0);
+  textSize(30);
+  text("TWEET",105,height-44);
 }
